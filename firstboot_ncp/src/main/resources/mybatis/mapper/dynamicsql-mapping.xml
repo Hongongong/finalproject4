@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="b">
+	<select id="memberPagingList" resultType="memberdto">
+		select * from c_members order by regtime desc limit 
+		<!-- int[] = {0, 5} 같은 배열 받아서 0, 5 형식으로  -->
+		<foreach collection="array" item="num" separator=",">
+			#{num}
+		</foreach>
+	</select>
+	
+	<select id="searchMemberList" resultType="memberdto">
+		select * from c_members where pw in
+		<!-- int[] = {1111, 2222, 3333, 4444, 5555} 메인에서 넘어옴 -->
+		<!-- (1111, 2222, 3333,,,) 형식으로 -->
+		<foreach collection="array" item="pw" separator="," open="(" close=")">
+			#{pw}
+		</foreach>
+	</select>
+	
+	<!-- #{} - ' ' 자동 붙음 / ${} - ' ' 자동 안붙음, 컬럼이름 등에 사용 -->
+	<select id="searchMemberList2" parameterType="java.util.HashMap" resultType="memberdto">
+		select * from c_members where ${colname} like #{colvalue}
+	</select>
+	
+	<!-- name 있으면 where 조건 걸고 검색, 없으면 그냥 검색 -->
+	<select id="searchMemberList3" resultType="memberdto">
+		select * from c_members
+		<if test="name != null">
+			where name like #{name}		
+		</if>
+	</select>
+	
+	<select id="searchMemberList4" parameterType="memberdto" resultType="memberdto">
+		select * from c_members where
+		<choose>
+			<when test="name != null">
+				name like concat('%', #{name}, '%')
+			</when>
+			<when test="email != null">
+				email like concat('%', #{email}, '%')
+			</when>
+			<when test="phone != null">
+				phone like concat('%', #{phone}, '%')
+			</when>
+			<when test="id != null">
+				id like concat('%', #{id}, '%')
+			</when>
+		</choose>
+		order by regtime desc;
+	</select>
+	
+	<sql id="membertable">
+		select * from c_members
+	</sql>
+	
+	<sql id="where">
+		where id=#{id}
+	</sql>
+	
+	<sql id="boardtable">
+		select * from board
+	</sql>
+	
+	<select id="totalSQL" parameterType="String" resultType="memberdto">
+		<include refid="membertable" />
+		<include refid="where" />
+	</select>
+	
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<!-- sts4에선 mapper namespace를 아무거나하면 x -->
+<!-- 읽어야할 객체로 설정 -->
+<mapper namespace="boardmapper.BoardDAO">
+
+	<insert id="insertBoard" parameterType="boarddto">
+		<!-- dto 멤버변수 명과 동일한 변수명으로 설정해야함 -->
+		<!-- seq, title, contents, writer, pw, viewcount, writingtime -->
+		<!-- seq는 null로 해도됨 어차피 db에서 자동으로 +1 값 추가 -->
+		insert into board values(null, #{title}, #{content}, #{writer}, #{pw}, 0, now())
+	</insert>
+	
+	<!-- int[] b = {0, 3} -->
+	<select id="pagingBoardList" resultType="boarddto">
+		select * from board order by writingtime desc limit
+		<foreach collection="array" item="a" separator=",">
+			#{a}
+		</foreach>
+	</select>
+	
+	<select id="totalCount" resultType="int">
+		select count(*) from board
+	</select>
+	
+	<update id="updateViewCount" parameterType="int">
+		update board set viewcount = viewcount + 1 where seq = #{seq}
+	</update>
+	
+	<select id="getDetail" parameterType="int" resultType="boarddto">
+		select * from board where seq = #{seq}
+	</select>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from board where seq = #{seq}
+	</delete>
+	
+	<update id="updateBoard" parameterType="boarddto">
+		update board set title = #{title}, content = #{content}, writingtime = now() where seq = #{seq}
+	</update>
+	
+	<select id="boardSearchList" resultType="boarddto" parameterType="java.util.HashMap">
+		select * from board where
+		<choose>
+			<when test="searchcolname == null">
+				title like #{searchvalue} or content like #{searchvalue} or writer like #{searchvalue}
+			</when>
+			<otherwise>			
+				${searchcolname} like #{searchvalue}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="boardSearchCount" resultType="int" parameterType="java.util.HashMap">
+		select count(*) from board where
+		<choose>
+			<when test="searchcolname == null">
+				title like #{searchvalue} or content like #{searchvalue} or writer like #{searchvalue}
+			</when>
+			<otherwise>			
+				${searchcolname} like #{searchvalue}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

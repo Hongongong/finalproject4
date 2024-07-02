@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+
+	<!-- 0. Mybatis 기록 로그 콘솔에 남기기위해 라이브러리 사용 : Log4J.JAR-->
+	<!-- sts3 에서만 사용 -->
+	<!-- <settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings> -->
+
+	<!-- 1. typeAliases는 xml 첫번째에 쓰여야함 -->
+	<typeAliases>
+		<!-- <typeAlias type="spring.mybatis.service.MemberDTO" alias="memberdto"/> -->
+		<typeAlias type="boardmapper.MemberDTO" alias="memberdto"/>
+		<typeAlias type="boardmapper.BoardDTO" alias="boarddto"/>
+	</typeAliases>
+	
+	<!-- spring 연동하면 2,3 번 필요없음 -->	
+
+</configuration>

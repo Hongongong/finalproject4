@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<!-- sts4에선 mapper namespace를 아무거나하면 x -->
+<!-- 읽어야할 객체로 설정 -->
+<mapper namespace="boardmapper.MemberDAO">
+	<select id = "memberList" resultType="memberdto">
+		select * from c_members
+	</select>
+	
+	<!-- C_MEMBERS 테이블 ID 컬럼 - MemberDTO 객체 생성 ID 변수 주입 -->
+	<select id="oneMember" resultType="memberdto">
+		<!-- parameterType = "String" 생략 -->
+		select * from c_members where id = #{id}
+	</select>
+	
+	<select id="memberCount" resultType="int">
+		select count(*) from c_members
+	</select>
+	
+	<insert id="insertMember">
+		insert into c_members values('mybatis1', '홍길동', 1111, '010-9999-8888', 'dong@kil.com', now())
+	</insert>
+	
+	<insert id="insertMemberDTO" parameterType="memberdto">
+		<!-- dto 멤버변수 명과 동일한 변수명으로 설정해야함 -->
+		insert into c_members values(#{id}, #{name}, #{pw}, #{phone}, #{email}, now())
+	</insert>
+	
+	<update id="updateMember" parameterType="memberdto">
+		update c_members set pw = #{pw}, email = #{email} where id = #{id}
+	</update>
+	
+	<delete id="deleteMember" parameterType="String">
+		delete from c_members where id = #{memberid}
+	</delete>
+	
+</mapper>
