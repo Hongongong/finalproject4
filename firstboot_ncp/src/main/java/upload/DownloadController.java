@@ -19,7 +19,7 @@ public class DownloadController {
 	// c:/fullstack/upload 파일 리스트 출력- 뷰 필요
 	@RequestMapping("/filedownloadlist")
 	ModelAndView downloadlist() {
-		File f = new File("c:/fullstack/upload/");
+		File f = new File(UploadInform.uploadPath); // 리눅스에선 /usr/mydir/upload 로 변경 필요
 		String [] filearray = f.list();
 		
 		ModelAndView mv = new ModelAndView();
@@ -34,11 +34,11 @@ public class DownloadController {
 	void downloadresult(String filename, HttpServletResponse response) throws IOException {
 		response.setContentType("application/download");
 		//view 없다
-		response.setContentLength( (int) (new File("c:/fullstack/upload/"+filename).length()) );
+		response.setContentLength( (int) (new File(UploadInform.uploadPath + filename).length()) );  // 리눅스에선 /usr/mydir/upload 로 변경 필요
 		response.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
 		
 		OutputStream out = response.getOutputStream();
-		FileInputStream fin = new FileInputStream(new File( "c:/fullstack/upload/"+filename )  );
+		FileInputStream fin = new FileInputStream(new File(UploadInform.uploadPath + filename )  );  // 리눅스에선 /usr/mydir/upload 로 변경 필요
 		FileCopyUtils.copy(fin, out);
 		fin.close();
 		out.close();

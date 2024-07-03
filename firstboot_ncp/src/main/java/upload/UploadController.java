@@ -24,8 +24,8 @@ public class UploadController {
 		//내부 servlet 2.5 기본-한글 x) (servlet 6.0-한글요청정보 인식)
 		//a.txt -->  a_UUID.randomUUID().txt
 		
-		String savePath = "c:/fullstack/upload/";// 폴더 생성
-				
+		String savePath = UploadInform.uploadPath;// 폴더 생성
+		// ncp 서버 리눅스는 c: 이렇게 시작 안하고 바로 /usr/mydir/upload 이렇게 설정해야함		
 		MultipartFile file1 = dto.getFile1();
 		String newFileName1 = null;
 		if(!file1.isEmpty()) {
